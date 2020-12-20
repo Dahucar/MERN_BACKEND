@@ -9,8 +9,8 @@ const crearUsuario = async (req, res = response) => {
         let usuario = await Usuario.findOne({ email });
 
         if ( usuario ) {
-            res.status(400).json({
-                ok: true,
+            return res.status(400).json({
+                ok: false,
                 msg: 'El correo ingresado ya esta uso por otro usuario.',  
             });
         }
@@ -25,7 +25,7 @@ const crearUsuario = async (req, res = response) => {
 
         const token = await generarJWT( usuario.id, usuario.name );
 
-        res.status(201).json({
+        return res.status(201).json({
             ok: true,
             msg: 'Te acabas de registrar correctamente.',
             token,
@@ -33,7 +33,7 @@ const crearUsuario = async (req, res = response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        return res.status(500).json({
             ok: false,
             msg: 'Ocurrio un error al procesar su solicitud.'
         });
@@ -63,7 +63,7 @@ const loginUsuario = async (req, res = response) => {
         // generando un JWT con los datos
         const token = await generarJWT( usuario.id, usuario.name );
 
-        res.status(201).json({
+        return res.status(201).json({
             ok: true,
             msg: 'login in.',
             token,
@@ -71,7 +71,7 @@ const loginUsuario = async (req, res = response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
+        return res.status(500).json({
             ok: false,
             msg: 'Error durante el proceso de login.'
         });
@@ -79,12 +79,16 @@ const loginUsuario = async (req, res = response) => {
 }
 
 const revalidarToken = async (req, res = response) => {
-    const { uid, name} = req;
+    const { uid, name } = req;
     const nuevoToken = await generarJWT( uid, name );
     res.json({
         ok: true,
         msg: 'renew',
-        nuevoToken
+        nuevoToken,
+        user: {
+            uid,
+            name
+        }
     });
 }
 

@@ -6,9 +6,15 @@ const dbConecction = async () => {
             useNewUrlParser: true, 
             useUnifiedTopology: true,
             useCreateIndex: true
+        }).then(() => {
+            console.log('MongoDB > ONLINE <') ;
+        })
+        .catch(( error ) => {
+            console.log('MongoDB > OFFLINE <') ;
+            console.log('------- Decription Error ------- ') ;
+            console.error(error);
+            console.log('------- Decription Error ------- ') ;
         }); 
-
-        console.log('DB conectada.');
     } catch (error) {
         console.log(error);
         throw new Error('Error al conectar con la BBDD');
